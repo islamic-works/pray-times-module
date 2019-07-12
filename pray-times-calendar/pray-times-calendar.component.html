@@ -1,0 +1,26 @@
+<DockLayout class="page">
+	<label dock="top" text="Pray Times" class="header"></label>
+	<FlexboxLayout dock="bottom" class="footer"><ns-menu [active]="active"></ns-menu></FlexboxLayout>
+	<ScrollView height="100%" dock="left">
+		<GridLayout columns="*,2*" rows="auto,auto,auto,auto,auto,auto,auto,auto,auto" backgroundColor="lightgray">
+			<Label class="h2" text="imsak" col="0" row="0" backgroundColor="red"></Label>
+			<Label class="h3" [text]="times.imsak" col="1" row="0" backgroundColor="red"></Label>
+			<Label class="h2" text="fajr" col="0" row="1" backgroundColor="red"></Label>
+			<Label class="h3" [text]="times.fajr" col="1" row="1" backgroundColor="red"></Label>
+			<Label class="h2" text="sunrise" col="0" row="2" backgroundColor="red"></Label>
+			<Label class="h3" [text]="times.sunrise" col="1" row="2" backgroundColor="red"></Label>
+			<Label class="h2" text="dhuhr" col="0" row="3" backgroundColor="red"></Label>
+			<Label class="h3" [text]="times.dhuhr" col="1" row="3" backgroundColor="red"></Label>
+			<Label class="h2" text="asr" col="0" row="4" backgroundColor="red"></Label>
+			<Label class="h3" [text]="times.asr" col="1" row="4" backgroundColor="red"></Label>
+			<Label class="h2" text="sunset" col="0" row="5" backgroundColor="red"></Label>
+			<Label class="h3" [text]="times.sunset" col="1" row="5" backgroundColor="red"></Label>
+			<Label class="h2" text="maghrib" col="0" row="6" backgroundColor="red"></Label>
+			<Label class="h3" [text]="times.maghrib" col="1" row="6" backgroundColor="red"></Label>
+			<Label class="h2" text="isha" col="0" row="7" backgroundColor="red"></Label>
+			<Label class="h3" [text]="times.isha" col="1" row="7" backgroundColor="red"></Label>
+			<Label class="h2" text="midnight" col="0" row="8" backgroundColor="red"></Label>
+			<Label class="h3" [text]="times.midnight" col="1" row="8" backgroundColor="red"></Label>
+      </GridLayout> 
+   </ScrollView>
+</DockLayout>
