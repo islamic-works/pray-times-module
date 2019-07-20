@@ -4,11 +4,12 @@ import { PrayTimesRoutingModule } from './pray-times-routing.module';
 import { NativeScriptCommonModule } from 'nativescript-angular/common';
 import { PrayTimesCalendarComponent } from './pray-times-calendar/pray-times-calendar.component';
 import { MenuModule } from '../menu/menu.module';
-
+import { NativeScriptUICalendarModule   } from 'nativescript-ui-calendar/angular'; 
 
 @NgModule({
   declarations: [PrayTimesCalendarComponent],
   imports: [
+     NativeScriptUICalendarModule, 
     PrayTimesRoutingModule,
     NativeScriptCommonModule,
     MenuModule

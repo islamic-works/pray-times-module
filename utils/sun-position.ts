@@ -1,0 +1,1 @@
+export interface SunPosition{ declination: number, equation: number }
