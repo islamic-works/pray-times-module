@@ -1,10 +1,17 @@
 <DockLayout class="page">
-	<label dock="top" text="Pray Times" class="header"></label>
-	<FlexboxLayout dock="bottom" class="footer">
-		<ns-menu [active]="active"></ns-menu>
-	</FlexboxLayout>
-	<ScrollView height="100%" width="100%" dock="left">
-		<RadCalendar height="100%" width="100%"[eventSource]="times" [eventsViewMode]="eventsViewMode" [viewMode]="viewMode" [minDate]="minDate">
-		</RadCalendar>
-	</ScrollView>
+    <label dock="top" text="Pray Times" class="header"></label>
+    <FlexboxLayout dock="bottom" class="footer">
+        <ns-menu [active]="active"></ns-menu>
+    </FlexboxLayout>
+
+    <GridLayout orientation="vertical" rows="*, auto" height="100%" width="100%" dock="left">
+        <RadCalendar #prayTimesCalendar height="100%" width="100%" [eventSource]="times"
+            [eventsViewMode]="eventsViewMode" [viewMode]="viewMode" [minDate]="minDate" selectionMode="Single"
+            [displayedDate]="displayedDate" [dateSelected]="onDateSelected">
+        </RadCalendar>
+        <StackLayout row="2" dir="horizontal">
+            <Button text="hoje" (tap)="onTodayTap()"></Button>
+            <Button text="Novo Evento" (tap)="onNewEventTap()"></Button>
+        </StackLayout>
+    </GridLayout>
 </DockLayout>
