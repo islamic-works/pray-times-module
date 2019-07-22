@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Page } from 'tns-core-modules/ui/page/page';
 
-import { RadCalendar, CalendarEvent, CalendarViewMode, CalendarEventsViewMode, CalendarSelectionEventData } from 'nativescript-ui-calendar';
+import { RadCalendar, CalendarEvent, CalendarViewMode, CalendarEventsViewMode, CalendarSelectionEventData, DayEventsViewStyle, CalendarDayViewStyle, CalendarInlineEventSelectedData } from 'nativescript-ui-calendar';
 
 import { RadCalendarComponent } from 'nativescript-ui-calendar/angular/calendar-directives';
 import { Fab } from 'nativescript-floatingactionbutton';
@@ -26,10 +26,10 @@ export class PrayTimesCalendarComponent implements OnInit {
     active: string;
 
     viewMode: CalendarViewMode = CalendarViewMode.Day;
-    eventsViewMode: CalendarEventsViewMode = CalendarEventsViewMode.Popover;
+    eventsViewMode: CalendarEventsViewMode;
 
     minDate: Date = new Date();
-    actualDate:Date;
+    actualDate: Date;
 
     displayedDate: Date = new Date();
     prayEvents: CalendarEvent[];
@@ -37,8 +37,9 @@ export class PrayTimesCalendarComponent implements OnInit {
     monthNamesViewStyle: any;
     weekViewStyle: any;
     yearViewStyle: any;
-    dayViewStyle: any;
-locale: string;
+    dayViewStyle: CalendarDayViewStyle;
+
+    locale: string;
 
     constructor(
         private page: Page,
@@ -49,8 +50,13 @@ locale: string;
     ngOnInit() {
         // this._menuNew.addEventListener("tap", (data) => console.log(data));
 
+        this.active = "praytimes";
+        this.page.actionBarHidden = true;
+
         this.locale = "pt-BR";
-      
+
+        this.eventsViewMode = CalendarEventsViewMode.None;
+
         /*
           [monthViewStyle]="monthViewStyle" [weekViewStyle]="weekViewStyle" [monthNamesViewStyle]="monthNamesViewStyle"
             [yearViewStyle]="yearViewStyle" [dayViewStyle]="dayViewStyle" 
@@ -62,26 +68,29 @@ locale: string;
         this.dayViewStyle = this._styleService.getDayViewStyle();
 */
 
+        this.dayViewStyle = this._styleService.getDayViewStyle__2();
+        
         this.displayedDate = new Date();
         this.minDate = new Date(this.minDate.getFullYear(), this.minDate.getMonth(), this.minDate.getDate() - this.minDate.getDay());
-
-        this.active = "praytimes";
-        this.page.actionBarHidden = true;
 
         if (this.settings.debug) console.log("PrayTimesCalendar Component Init!");
     }
 
     public get times(): CalendarEvent[] {
-        let times = this.service.getTimes(this.actualDate);
+        let times = this.service.getEventsForDate(this.actualDate);
         if (this.settings.debug) console.log("PrayTimesCalendar.Component: times:", times);
 
         return times;
     }
 
+    onInlineEventSelectedEvent(args:CalendarInlineEventSelectedData){
+        console.log(args);
+    }
+
     onDateSelected(args: CalendarSelectionEventData) {
         const calendar: RadCalendar = args.object;
 
-        this. actualDate = args.date;
+        this.actualDate = args.date;
         const events: Array<CalendarEvent> = calendar.getEventsForDate(this.actualDate);
 
         if (!events.find((v, i, o) => {

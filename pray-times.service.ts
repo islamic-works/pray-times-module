@@ -7,6 +7,8 @@ import { PrayTimes } from './utils/praytimes';
 import { Color } from 'tns-core-modules/color/color';
 import { GpsData } from './utils/gps-data';
 import { PrayTimeCalendarEvent } from './model/pray-time-calendar-event';
+import { PrayTimesSettings } from './utils/pray-times-settings';
+import { PrayTimesModule } from './pray-times.module';
 
 
 @Injectable({
@@ -14,6 +16,14 @@ import { PrayTimeCalendarEvent } from './model/pray-time-calendar-event';
 })
 export class PrayTimesService {
     private prayTimes: PrayTimes;
+
+    get prayTimesMethod(): string {
+        return this.getSettings().method;
+    }
+
+    get showAstronomicEvents(): boolean {
+        return this.getSettings().showAstronomicEvents;
+    }
 
     constructor(private settings: SettingsService) {
         /*
@@ -26,17 +36,21 @@ export class PrayTimesService {
        Jafari: 'Shia Ithna-Ashari, Leva Institute, Qum',
          */
 
-        let prayTimesMethod = this.settings.prayTimesMethod;
+        let prayTimesMethod = this.prayTimesMethod;
         if (this.settings.debug) console.log("Pray Times Method:", prayTimesMethod);
         this.prayTimes = new PrayTimes(prayTimesMethod);
         if (this.settings.debug) console.log("PrayTimes Services Init!");
 
         if (this.settings.debug) {
-            console.log("Metodo: ", this.prayTimes.getMethod());
+            console.log("Método: ", this.prayTimes.getMethod());
         }
     }
 
-    getTimes(date: Date = new Date()): Array<PrayTimeCalendarEvent> {
+    private getSettings(param?: string) {
+        return this.settings.getSettings<PrayTimesSettings>(PrayTimesModule.MODULE_NAME);
+    }
+
+    getEventsForDate(date: Date = new Date()): Array<PrayTimeCalendarEvent> {
         if (this.settings.debug) console.log("get times: ", date);
 
         const colors: Array<Color> = [new Color(200, 188, 26, 214), new Color(220, 255, 109, 130), new Color(255, 55, 45, 255), new Color(199, 17, 227, 10), new Color(255, 255, 54, 3)];
@@ -61,34 +75,26 @@ export class PrayTimesService {
         for (const timeType in PrayTimes.timeNames) {
             if (PrayTimes.timeNames.hasOwnProperty(timeType)) {
                 const time: string = prayTimes[timeType];
-                const timeName = PrayTimes.timeNames[timeType];
+                const timeName: string = PrayTimes.timeNames[timeType];
+                const prayTimeFlag: boolean = PrayTimes.PRAY_TIMES.indexOf(timeType) > 0;
+                const duration: number = prayTimeFlag ? 20 : 1;
+                if (prayTimeFlag || this.showAstronomicEvents) {
 
-                const year = date.getFullYear();
-                const month = date.getMonth();
-                const day: number = date.getDate();
-                const hour: number = parseInt(time.split(":")[0]);
-                const minute: number = parseInt(time.split(":")[1]);
+                    const event: PrayTimeCalendarEvent = new PrayTimeCalendarEvent(
+                        timeName, timeName,
+                        date, time, duration, this.prayTimes.timeFormat,
+                        prayTimeFlag, false,
+                        colors[i]);
 
+                    if (this.settings.debug) {
+                        console.log("Pray Event: ", event);
+                    }
 
-                const startDate = new Date(year, month, day, hour, minute);
-                const endDate = new Date(year, month, day, hour, minute + 10);
-                if (this.settings.debug) {
-                    console.log("Time: ", time);
-                    console.log("Time Name: ", timeName);
-                    console.log("Hour: ", hour);
-                    console.log("Minute: ", minute);
-                    console.log("Start Date: ", startDate);
-                    console.log("End DAte: ", endDate);
+                    events.push(event);
+
+                    i++;
+                    if (i >= colors.length) i = 0
                 }
-                
-                const event: PrayTimeCalendarEvent = new PrayTimeCalendarEvent(timeName, timeName, startDate, endDate, PrayTimes.PRAY_TIMES.indexOf(timeType) > 0, false, colors[i]);
-
-                if (this.settings.debug) {
-                    console.log("Pray Event: ", event);
-                }
-                events.push(event);
-
-                i++;
             }
         }
 

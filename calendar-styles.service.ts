@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Color } from 'tns-core-modules/color/color';
 import { CalendarMonthViewStyle, CalendarSelectionShape, DayCellStyle, CalendarFontStyle, CalendarCellAlignment, CellStyle, CalendarWeekViewStyle, CalendarYearViewStyle, MonthCellStyle, CalendarDayViewStyle, DayEventsViewStyle, CalendarMonthNamesViewStyle, AllDayEventsViewStyle } from 'nativescript-ui-calendar';
+import { ViewBase } from 'tns-core-modules/ui/page/page';
+import { SettingsService } from '../services/settings.service';
 
 @Injectable({
-  providedIn: 'root'
-}) 
+    providedIn: 'root'
+})
 export class CalendarStylesService {
+
     private _brownColor = new Color("#745151");
     private _lightYellowColor = new Color("#f1e8ca");
     private _greenBlueColor = new Color("#66bbae");
@@ -25,6 +28,27 @@ export class CalendarStylesService {
     private _blueVioletColor = new Color("BlueViolet");
     private _preferredFontName = "Times New Roman";
 
+    constructor(private _settings: SettingsService) { }
+
+    adjust<S extends ViewBase>(style: S | { new(): S; }): S {
+        if (this._settings.debug) {
+            console.log("CalendarStylesService.adjust: ", style);
+            console.log("function? ", typeof style);
+        }
+        if (typeof style == 'function') style = new (style as { new(): S; })();
+
+        if (style instanceof CalendarMonthViewStyle) {
+            if (this._settings.debug) console.log("CalendarStylesService.adjust: CalendarMonthViewStyle");
+
+        } else if (style instanceof DayEventsViewStyle) {
+            if (this._settings.debug) console.log("CalendarStylesService.adjust: DayEventViewStyle");
+        } else if (style instanceof CalendarDayViewStyle) {
+            if (this._settings.debug) console.log("CalendarStylesService.adjust: CalendarDayViewStyle");
+        }
+        else throw new Error("Method not implemented.");
+
+        return style as S;
+    }
     getMonthViewStyle(): CalendarMonthViewStyle {
         const monthViewStyle = new CalendarMonthViewStyle();
         monthViewStyle.backgroundColor = this._grayColor;
@@ -264,7 +288,6 @@ export class CalendarStylesService {
 
         return yearViewStyle;
     }
-
     getDayViewStyle(): CalendarDayViewStyle {
         const dayViewStyle = new CalendarDayViewStyle();
         dayViewStyle.backgroundColor = this._orangeColor;
@@ -373,6 +396,126 @@ export class CalendarStylesService {
 
         const allDayEventsViewStyle = new AllDayEventsViewStyle();
         allDayEventsViewStyle.backgroundColor = this._cyanColor;
+        allDayEventsViewStyle.allDayText = "DAILY";
+        allDayEventsViewStyle.allDayTextIsVisible = true;
+        dayViewStyle.allDayEventsViewStyle = allDayEventsViewStyle;
+
+        return dayViewStyle;
+    }
+    getDayViewStyle__2(): CalendarDayViewStyle {
+        const dayViewStyle = new CalendarDayViewStyle();
+//        dayViewStyle.backgroundColor = this._orangeColor;
+//        dayViewStyle.showWeekNumbers = true;
+        dayViewStyle.showDayNames = true;
+        dayViewStyle.showTitle = false;
+
+        const todayCellStyle = new DayCellStyle();
+        todayCellStyle.cellBackgroundColor = this._orangeColor;
+//        todayCellStyle.cellBorderWidth = 1;
+//        todayCellStyle.cellBorderColor = this._lightYellowColor;
+//        todayCellStyle.cellTextColor = this._brownColor;
+//        todayCellStyle.cellTextFontName = this._preferredFontName;
+        todayCellStyle.cellTextFontStyle = CalendarFontStyle.Bold;
+        todayCellStyle.cellTextSize = 14;
+        dayViewStyle.todayCellStyle = todayCellStyle;
+
+        /*
+         * Define o estilo das celulas que apresentam ifnromação do dia
+         *  
+         */
+        const dayCellStyle = new DayCellStyle();
+//        dayCellStyle.showEventsText = true;
+        dayCellStyle.showEventsText = false;
+//        dayCellStyle.eventTextColor = this._whiteColor;
+//        dayCellStyle.eventFontName = this._preferredFontName;
+//        dayCellStyle.eventFontStyle = CalendarFontStyle.BoldItalic;
+//        dayCellStyle.eventTextSize = 8;
+//        dayCellStyle.cellAlignment = CalendarCellAlignment.VerticalCenter;
+//        dayCellStyle.cellPaddingHorizontal = 10;
+//        dayCellStyle.cellPaddingVertical = 5;
+//        dayCellStyle.cellBackgroundColor = this._lightGreenColor;
+        dayCellStyle.cellBorderWidth = 1;
+//        dayCellStyle.cellBorderColor = this._lightYellowColor;
+//        dayCellStyle.cellTextColor = this._brownColor;
+//        dayCellStyle.cellTextFontName = this._preferredFontName;
+//        dayCellStyle.cellTextFontStyle = CalendarFontStyle.Bold;
+        dayCellStyle.cellTextSize = 10;
+        dayViewStyle.dayCellStyle = dayCellStyle;
+
+        const weekendCellStyle = new DayCellStyle();
+//        weekendCellStyle.eventTextColor = this._blueVioletColor;
+//        weekendCellStyle.eventFontName = this._preferredFontName;
+//        weekendCellStyle.eventFontStyle = CalendarFontStyle.BoldItalic;
+//        weekendCellStyle.eventTextSize = 8;
+//        weekendCellStyle.cellAlignment = CalendarCellAlignment.VerticalCenter;
+//        weekendCellStyle.cellPaddingHorizontal = 10;
+//        weekendCellStyle.cellPaddingVertical = 5;
+//        weekendCellStyle.cellBackgroundColor = this._lightYellowColor;
+//        weekendCellStyle.cellBorderWidth = 1;
+//        weekendCellStyle.cellBorderColor = this._lightYellowColor;
+//        weekendCellStyle.cellTextColor = this._brownColor;
+//        weekendCellStyle.cellTextFontName = this._preferredFontName;
+        weekendCellStyle.cellTextFontStyle = CalendarFontStyle.Bold;
+        weekendCellStyle.cellTextSize = 12;
+        dayViewStyle.weekendCellStyle = weekendCellStyle;
+
+        const selectedCellStyle = new DayCellStyle();
+        selectedCellStyle.eventTextColor = this._blueColor;
+//        selectedCellStyle.eventFontName = this._preferredFontName;
+//        selectedCellStyle.eventFontStyle = CalendarFontStyle.Bold;
+//        selectedCellStyle.eventTextSize = 8;
+//        selectedCellStyle.cellAlignment = CalendarCellAlignment.VerticalCenter;
+//        selectedCellStyle.cellPaddingHorizontal = 10;
+//        selectedCellStyle.cellPaddingVertical = 5;
+        selectedCellStyle.cellBackgroundColor = this._brownColor;
+        selectedCellStyle.cellBorderWidth = 2;
+        selectedCellStyle.cellBorderColor = this._lightYellowColor;
+        selectedCellStyle.cellTextColor = this._blackColor;
+//        selectedCellStyle.cellTextFontName = this._preferredFontName;
+        selectedCellStyle.cellTextFontStyle = CalendarFontStyle.Bold;
+        selectedCellStyle.cellTextSize = 18;
+        dayViewStyle.selectedDayCellStyle = selectedCellStyle;
+
+        const weekNumberCellStyle = new CellStyle();
+//        weekNumberCellStyle.cellBackgroundColor = this._lightGrayColor;
+//        weekNumberCellStyle.cellBorderWidth = 1;
+//        weekNumberCellStyle.cellBorderColor = this._lightYellowColor;
+//        weekNumberCellStyle.cellTextColor = this._brownColor;
+//        weekNumberCellStyle.cellTextFontName = this._preferredFontName;
+//        weekNumberCellStyle.cellTextFontStyle = CalendarFontStyle.Bold;
+//        weekNumberCellStyle.cellTextSize = 8;
+        dayViewStyle.weekNumberCellStyle = weekNumberCellStyle;
+
+        const dayNameCellStyle = new CellStyle();
+//        dayNameCellStyle.cellBackgroundColor = this._lightYellowColor;
+        dayNameCellStyle.cellBorderWidth = 1;
+//        dayNameCellStyle.cellBorderColor = this._brownColor;
+//        dayNameCellStyle.cellTextColor = this._brownColor;
+//        dayNameCellStyle.cellTextFontName = this._preferredFontName;
+        dayNameCellStyle.cellTextFontStyle = CalendarFontStyle.Bold;
+        dayNameCellStyle.cellTextSize = 10;
+        dayViewStyle.dayNameCellStyle = dayNameCellStyle;
+
+        const titleCellStyle = new DayCellStyle();
+//        titleCellStyle.cellBackgroundColor = this._orangeColor;
+        titleCellStyle.cellBorderWidth = 1;
+        titleCellStyle.cellBorderColor = this._lightYellowColor;
+        titleCellStyle.cellTextColor = this._brownColor;
+//        titleCellStyle.cellTextFontName = this._preferredFontName;
+        titleCellStyle.cellTextFontStyle = CalendarFontStyle.Bold;
+        titleCellStyle.cellTextSize = 18;
+        dayViewStyle.titleCellStyle = titleCellStyle;
+
+        const dayEventsViewStyle = new DayEventsViewStyle();
+//        dayEventsViewStyle.backgroundColor = this._lightBlueColor;
+        dayEventsViewStyle.timeLabelFormat = "HH:mm";
+//        dayEventsViewStyle.timeLabelTextColor = this._brightBlueColor;
+        dayEventsViewStyle.timeLabelTextSize = 10;
+
+        dayViewStyle.dayEventsViewStyle = dayEventsViewStyle;
+
+        const allDayEventsViewStyle = new AllDayEventsViewStyle();
+//        allDayEventsViewStyle.backgroundColor = this._cyanColor;
         allDayEventsViewStyle.allDayText = "DAILY";
         allDayEventsViewStyle.allDayTextIsVisible = true;
         dayViewStyle.allDayEventsViewStyle = allDayEventsViewStyle;

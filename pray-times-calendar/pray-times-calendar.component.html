@@ -5,8 +5,9 @@
     </FlexboxLayout>
 
     <GridLayout orientation="vertical" rows="*, auto" height="100%" width="100%" dock="left">
-        <RadCalendar #prayTimesCalendar height="100%" width="100%" 
-        
+    RadCalendar.inlineEventSelectedEvent = "inlineEventSelected";
+    <RadCalendar #prayTimesCalendar
+
             [eventSource]="times"
             
             [eventsViewMode]="eventsViewMode" [viewMode]="viewMode" [minDate]="minDate" 
@@ -15,7 +16,11 @@
             
             (dateSelected)="onDateSelected($event)"
 
+(inlineEventSelected)="onInlineEventSelectedEvent($event)"
+
             [displayedDate]="displayedDate"
+
+            [dayViewStyle]="dayViewStyle" 
             
            >
         </RadCalendar>
