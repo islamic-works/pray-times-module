@@ -83,6 +83,12 @@ export class PrayTimes {
         isha: 'Isha',
         midnight: 'Midnight'
     };
+    public static readonly PRAY_TIMES:string[] = [
+        "fajr",
+        "dhuhr",
+        "asr",
+        "maghrib",
+        "isha"];
 
     // Calculation Methods
     public static readonly methods = {

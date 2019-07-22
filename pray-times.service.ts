@@ -6,6 +6,8 @@ import { SettingsService } from '../services/settings.service';
 import { PrayTimes } from './utils/praytimes';
 import { Color } from 'tns-core-modules/color/color';
 import { GpsData } from './utils/gps-data';
+import { PrayTimeCalendarEvent } from './model/pray-time-calendar-event';
+
 
 @Injectable({
     providedIn: 'root'
@@ -23,6 +25,7 @@ export class PrayTimesService {
        Tehran: 'Institute of Geophysics, University of Tehran',
        Jafari: 'Shia Ithna-Ashari, Leva Institute, Qum',
          */
+
         let prayTimesMethod = this.settings.prayTimesMethod;
         if (this.settings.debug) console.log("Pray Times Method:", prayTimesMethod);
         this.prayTimes = new PrayTimes(prayTimesMethod);
@@ -32,12 +35,13 @@ export class PrayTimesService {
             console.log("Metodo: ", this.prayTimes.getMethod());
         }
     }
-    getTimes(date: Date = new Date()): Array<CalendarEvent> {
+
+    getTimes(date: Date = new Date()): Array<PrayTimeCalendarEvent> {
         if (this.settings.debug) console.log("get times: ", date);
 
         const colors: Array<Color> = [new Color(200, 188, 26, 214), new Color(220, 255, 109, 130), new Color(255, 55, 45, 255), new Color(199, 17, 227, 10), new Color(255, 255, 54, 3)];
 
-        const events: Array<CalendarEvent> = new Array<CalendarEvent>();
+        const events: Array<PrayTimeCalendarEvent> = new Array<PrayTimeCalendarEvent>();
 
         /*
       Latitude  : - 3.7167,
@@ -54,28 +58,31 @@ export class PrayTimesService {
 
         let i = 0;
 
-        for (const key in PrayTimes.timeNames) {
-            if (PrayTimes.timeNames.hasOwnProperty(key)) {
-                const pray: string = prayTimes[key];
-                const prayName = PrayTimes.timeNames[key];
+        for (const timeType in PrayTimes.timeNames) {
+            if (PrayTimes.timeNames.hasOwnProperty(timeType)) {
+                const time: string = prayTimes[timeType];
+                const timeName = PrayTimes.timeNames[timeType];
 
                 const year = date.getFullYear();
                 const month = date.getMonth();
                 const day: number = date.getDate();
-                const hour: number = parseInt(pray.split(":")[0]);
-                const minute: number = parseInt(pray.split(":")[1]);
+                const hour: number = parseInt(time.split(":")[0]);
+                const minute: number = parseInt(time.split(":")[1]);
 
 
                 const startDate = new Date(year, month, day, hour, minute);
                 const endDate = new Date(year, month, day, hour, minute + 10);
                 if (this.settings.debug) {
-                    console.log("Pray: ", prayName);
+                    console.log("Time: ", time);
+                    console.log("Time Name: ", timeName);
                     console.log("Hour: ", hour);
                     console.log("Minute: ", minute);
                     console.log("Start Date: ", startDate);
                     console.log("End DAte: ", endDate);
                 }
-                const event: CalendarEvent = new CalendarEvent(prayName, startDate, endDate, false, colors[i]);
+                
+                const event: PrayTimeCalendarEvent = new PrayTimeCalendarEvent(timeName, timeName, startDate, endDate, PrayTimes.PRAY_TIMES.indexOf(timeType) > 0, false, colors[i]);
+
                 if (this.settings.debug) {
                     console.log("Pray Event: ", event);
                 }

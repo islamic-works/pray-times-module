@@ -5,13 +5,27 @@
     </FlexboxLayout>
 
     <GridLayout orientation="vertical" rows="*, auto" height="100%" width="100%" dock="left">
-        <RadCalendar #prayTimesCalendar height="100%" width="100%" [eventSource]="times"
-            [eventsViewMode]="eventsViewMode" [viewMode]="viewMode" [minDate]="minDate" selectionMode="Single"
-            [displayedDate]="displayedDate" [dateSelected]="onDateSelected">
+        <RadCalendar #prayTimesCalendar height="100%" width="100%" 
+        
+            [eventSource]="times"
+            
+            [eventsViewMode]="eventsViewMode" [viewMode]="viewMode" [minDate]="minDate" 
+            
+            selectionMode="Single"
+            
+            (dateSelected)="onDateSelected($event)"
+
+            [displayedDate]="displayedDate"
+            
+           >
         </RadCalendar>
-        <StackLayout row="2" dir="horizontal">
-            <Button text="hoje" (tap)="onTodayTap()"></Button>
-            <Button text="Novo Evento" (tap)="onNewEventTap()"></Button>
-        </StackLayout>
+        <StackLayout row="2" orientation="horizontal">
+            <FAB #prayTimesMenuToDay (tap)="onTodayTap()" icon="~/assets/images/pray-times/today.png"
+               [ngClass]="{ 'fab-button-today-active': active === 'today' }" rippleColor="#f1f1f1"
+               class="fab-button fab-button-today"></FAB>
+            <FAB #prayTimesMenuNew (tap)="onNewEventTap()" icon="~/assets/images/pray-times/new-event.png"
+               [ngClass]="{ 'fab-button-today-active': active === 'today' }" rippleColor="#f1f1f1"
+               class="fab-button fab-button-today"></FAB>
+         </StackLayout>
     </GridLayout>
 </DockLayout>
