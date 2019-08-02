@@ -3,14 +3,19 @@ import { Page } from 'tns-core-modules/ui/page/page';
 
 import { RadCalendar, CalendarEvent, CalendarViewMode, CalendarEventsViewMode, CalendarSelectionEventData, DayEventsViewStyle, CalendarDayViewStyle, CalendarInlineEventSelectedData } from 'nativescript-ui-calendar';
 
-import { RadCalendarComponent } from 'nativescript-ui-calendar/angular/calendar-directives';
-import { Fab } from 'nativescript-floatingactionbutton';
-
+import { RadCalendarComponent } from 'nativescript-ui-calendar/angular/calendar-directives'; 
 
 import { PrayTimesService } from '../pray-times.service';
 import { SettingsService } from '~/app/services/settings.service';
 import { CalendarStylesService } from './../calendar-styles.service';
 import { PrayTimeCalendarEvent } from '../model/pray-time-calendar-event';
+
+import { registerElement } from "nativescript-angular/element-registry";
+    
+registerElement(
+  'Fab',
+  () => require('@nstudio/nativescript-floatingactionbutton').Fab
+);
 
 @Component({
     selector: 'ns-pray-times-calendar',
@@ -19,9 +24,7 @@ import { PrayTimeCalendarEvent } from '../model/pray-time-calendar-event';
     moduleId: module.id,
 })
 export class PrayTimesCalendarComponent implements OnInit {
-    @ViewChild("prayTimesCalendar", { static: false }) private _calendar: RadCalendarComponent;
-    @ViewChild("prayTimesMenuNew", { static: false }) private _menuNew: Fab;
-    @ViewChild("prayTimesMenuToDay", { static: false }) private _menuToDay: Fab;
+    @ViewChild("prayTimesCalendar", { static: false }) private _calendar: RadCalendarComponent; 
 
     active: string;
 
